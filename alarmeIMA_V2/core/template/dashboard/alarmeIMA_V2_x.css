@@ -1,0 +1,70 @@
+/* Set a fixed scrollable wrapper */
+.tableWrap {
+  height: 200px;
+  border: 2px solid black;
+  overflow: auto;
+}
+/* Set header to stick to the top of the container. */
+thead tr th {
+  position: sticky;
+  top: 0;
+}
+
+/* If we use border,
+we must use table-collapse to avoid
+a slight movement of the header row */
+table {
+ border-collapse: collapse;
+}
+
+/* Because we must set sticky on th,
+ we have to apply background styles here
+ rather than on thead */
+th {
+  padding: 16px;
+  padding-left: 15px;
+  border-left: 1px dotted rgba(200, 209, 224, 0.6);
+  border-bottom: 1px solid #e8e8e8;
+  background: #ffc491;
+  text-align: left;
+  /* With border-collapse, we must use box-shadow or psuedo elements
+  for the header borders */
+  box-shadow: 0px 0px 0 2px #e8e8e8;
+}
+
+/* Basic Demo styling */
+
+table {
+  width: 100%;
+  font-family: sans-serif;
+}
+
+table td {
+  padding: 16px;
+}
+
+tbody tr {
+  border-bottom: 2px solid #e8e8e8;
+  //background:red;
+}
+
+thead {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+tbody tr:hover {
+  background: #e6f7ff;
+}
+
+table thead th, table tbody tr {
+  text-align: center;
+}
+
+table thead th {
+  text-align: center;
+  border-left: 1px solid #f2f2f2; 
+  border-right: 1px solid #d5d5d5; 
+  background: #ddd;
+  font-weight: bold;
+}
