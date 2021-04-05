@@ -1,0 +1,16 @@
+{
+	"id" : "alarmeIMA_V2",
+	"name" : "Alarme IMA V2",
+	"description" : "Gestion de l'alarme IMA téléassistance V2",
+	"changelog" : "",
+	"documentation": "",
+	"licence" : "AGPL",
+	"author" : "ChD",
+	"require" : "4",
+	"category" : "security",
+	"hasDependency" : false,
+	"hasOwnDeamon" : false,
+	"maxDependancyInstallTime" : 0,
+	"language" : ["fr_FR","en_US","de_DE","sp_SP","ru_RU","id_ID","it_IT"],
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"]
+}
