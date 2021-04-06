@@ -1,0 +1,774 @@
+<div class="eqLogic eqLogic-widget allowResize allowReorderCmd allowLayout #custom_layout#  #category# "
+      style="min-height: 210px;min-width:220px; position: relative; width:#width#; height:#height#;
+             background-color:#background-color#; color:#color#; border:#border#; border-radius:#border-radius#;#style#"
+      data-eqType="#eqType#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#"  data-cat_color="#catcolore#" 
+      data-version="#version#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#">
+    <span class="statusCmd"></span>
+    <span class="cmd refresh pull-right cursor" data-cmd_id="#refreshAlarmeStatus_id#"><i class="fas fa-sync"></i></span>
+    <center class="widget-name">
+      <span class="reportModeVisible" style="display:none">#object_name#</span>
+      <a href="#eqLink#" class="reportModeHidden" style="margin-right: 5px;">#name_display# </a>
+    </center> 
+	
+	<div>
+		<div class="tab#uid#">
+          	<button class="tablinks#uid# active#uid#" onclick="openCity(event, 'alarmState#uid#')">Statut</button>
+			<button class="tablinks#uid#" onclick="openCity(event, 'events#uid#')">Evènements</button>
+			<button class="tablinks#uid#" onclick="openCity(event, 'cameras#uid#')">Caméras</button>
+			<button class="tablinks#uid#" onclick="openCity(event, 'snapshot#uid#')">Snapshot</button>
+		</div>
+	  
+		<div id="alarmState#uid#" class="tabcontent#uid#" >
+			<div class="global#uid#" >
+				<div  class="imageStatut#uid#">
+					<img  class="imgStatutAlarme#uid#" id="idImgStatutAlarme#uid#" src='plugins/alarmeIMA_V2/core/template/dashboard/img/alarm-orange.png' alt=''>
+                  	<span class="cmd cmd-widget #statusAlarme_history#" data-type="info" data-cmd_id="#statusAlarme_id#">
+				</div>
+			</div>  
+	
+		</div>
+
+		<div id="events#uid#" class="tabcontent#uid#">
+          	<span class="cmd refreshEvents pull cursor" data-cmd_id="#alarmeEvents_id#"><i class="fas fa-sync"></i></span>
+			<p id="tabAlarmEvent#uid#" class="ctabAlarmEvent#uid#"></p>
+	  </div>
+
+	  <div id="cameras#uid#" class="tabcontent#uid#">
+        <span class="cmd refreshCameras cursor" data-cmd_id="#cameraSnapshot_id#"><i class="fas fa-sync"></i></span>
+		<p id="tabCameraEvent#uid#" class="ctabCameraEvent#uid#"></p>
+	  </div>
+	  <div id="snapshot#uid#" class="tabcontent#uid#">
+		<div class="global#uid#" >
+			<p id="tabSnapshot#uid#" class="ctabSnapshot#uid#"></p>
+		</div>
+	  </div>
+	</div>
+	<div class="switch_3_ways_v2#uid#">
+		<div id="idOn#uid#" class="switch2#uid# on#uid#"></div>
+		<div id="idPartial#uid#" class="switch2#uid# partial#uid#"></div>
+		<div id="idOff#uid#" class="switch2#uid# off#uid#"></div>
+		<div id="selector#uid#" class="selector#uid#"></div>
+	</div>
+      	<!--manageModal-->	
+    <div id="myModal" class="modal">
+		<div id="idModal-content" class="modal-content">
+    		<span id="closeMyModal" class="close">&times;</span>
+          	<div class="loader#uid#"></div>
+          	<img class="itemPreview#id#" id="ItemPreview#id#" src="">
+  		</div>
+	</div>
+	
+	<div id="myModalPwd" class="modal" data-action="">
+		<div id="idtoto" class="toto">
+    		<span id="myModalPwd" class="close">&times;</span>
+          	<input id="tbInput" type="password" />
+            <div id="VirtualKey">
+              <div class="line">              	
+                <button id="btn1" class="favorite styled" type="button" onclick="input(this);" style="height:60px;width:60px">1</button>
+                <button id="btn2" class="favorite styled" type="button" onclick="input(this);" style="height:60px;width:60px">2</button>
+                <button id="btn3" class="favorite styled" type="button" onclick="input(this);" style="height:60px;width:60px">3</button>
+              </div>
+              <div class="line">
+	              <button id="btn4" class="favorite styled" type="button" onclick="input(this);">4</button>
+    	          <button id="btn5" class="favorite styled" type="button" onclick="input(this);">5</button>
+        	      <button id="btn6" class="favorite styled" type="button" onclick="input(this);" >6</button>
+              </div>
+              <div class="line">
+              	<button id="btn7" class="favorite styled" type="button" onclick="input(this);">7</button>
+              	<button id="btn8" class="favorite styled" type="button" onclick="input(this);">8</button>
+              	<button id="btn9" class="favorite styled" type="button" onclick="input(this);">9</button>
+              </div>
+              <div class="line">
+                <button id="btn0" class="favorite styled" type="button" onclick="input(this);">0</button>
+                <button id="btn0" class="favorite styled" type="button" onclick="del();"  style="height:60px;width:124px">SUP</button>
+              </div>
+              <div class="line">
+               	<button id="btn0" class="favorite styled" type="button" onclick="validate();" style="height:60px;width:188px">VALIDER</button>
+              </div>
+      		</div>	
+      	</div>
+  		</div>
+	</div>
+</div>  
+<script>
+  	console.log("Entree dans plugin im protect - Statut alarme : " + #statusAlarme# + " | id cmd statut alarme : " + #statusAlarme_id#);
+   	console.log("Rooms list : " + '#actionScreenshot_listValue#');
+    var globalAlarmStatut#uid#;
+                
+  	jeedom.cmd.update['#statusAlarme_id#'] = function(_options) {
+      	globalAlarmStatut#uid#=_options.display_value;
+		changeImgAlarm(_options.display_value);
+      	changeSelectAlarmMode(_options.display_value);
+      	setColorActiveSelector(getAlarmColor(_options.display_value));
+      	document.querySelector('.global#uid#').setAttribute('style', 'background-color: ' + getAlarmColor(_options.display_value)); 
+    }	
+	jeedom.cmd.update['#statusAlarme_id#']({display_value:'#statusAlarme#',valueDate:'#valueDate#'});
+  
+  	let listeIdTimeOut#uid# = [];
+  
+    var modal = document.getElementById("myModal");
+
+    // Get the <span> element that closes the modal
+  	var spanPwd = document.getElementsByClassName("close")[1];
+  // When the user clicks on <span> (x), close the modal
+    spanPwd.onclick = function() {
+      console.log("click close span");
+      document.getElementById("myModalPwd").style.display = "none";
+      document.getElementById('tbInput').value="";
+      deleteErrorSpan();
+    }
+  
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      console.log("event : " + event.target + " id : " + event.target.id);
+      if (event.target.id == "closeMyModal" || event.target.id == "myModal") {
+        modal.style.display = "none";
+		document.getElementById("ItemPreview#id#").src = "";
+        var i;
+        listeIdTimeOut#uid#.forEach((timeOut, i) => {
+        	console.log("id timeout : " + timeOut);
+          	clearTimeout(timeOut);
+        });
+      } else if (event.target.id == "myModalPwd") {
+        document.getElementById("myModalPwd").style.display = "none";
+        document.getElementById('tbInput').value="";
+        deleteErrorSpan();
+      }
+    }
+  
+  
+ 	
+	function displayPicture(picture) {
+      jeedom.cmd.execute({ id: '#actionScreenshot_id#', value: {'title': 'get', 'message': picture},
+                          success:  function($Result) {
+                            modal.style.display = "block";
+                            document.getElementById("ItemPreview#id#").src = "data:image/png;base64," + $Result;
+                          }
+                         });
+    }
+  
+  function taskArrayPictures(pictureUrl){
+    	var i;
+      pictureUrl.split(",").forEach((picture, i) => {
+        listeIdTimeOut#uid#.push(setTimeout(() => {
+          console.log("pic : " +  picture);
+          displayPicture(picture);
+        }, i * 1000));
+      });
+  }
+  
+  function getPicture(pictureUrl) {
+	//var decodingPicture=atob(pictureUrl);
+	//console.log("Base 64 picture : " + pictureUrl + "| decoding : " + decodingPicture);
+    let i = 0;
+    if (pictureUrl.split(",").length > 1) {
+      	while (i < 10) { 
+          taskWhile(i,pictureUrl); 
+           i++; 
+    	} 
+    } else {
+      	displayPicture(pictureUrl);
+    }
+  }
+  
+
+    function taskWhile(i,pictureUrl) { 
+      listeIdTimeOut#uid#.push(setTimeout(function() { 
+          console.log(i);
+        	taskArrayPictures(pictureUrl);
+      }, 8000*i)); 
+    } 
+  
+   function deletePicture(pictureUrl) {
+    	console.log("Function deletePicture - Param : " + pictureUrl);
+    	jeedom.cmd.execute({id: '#actionScreenshot_id#', value: {'title': 'delete', 'message': pictureUrl}});
+    	
+  }
+  
+  function setColorActiveSelector(color) {
+    	// Get a NodeList of all .demo elements
+		const activeClass = document.querySelectorAll('.active#uid#');
+
+		// Change the text of multiple elements with a loop
+        activeClass.forEach(element => {
+          element.setAttribute('style', 'background-color: ' + color); 
+        });
+  }
+  
+  
+  function getAlarmColor(value) {
+    	var color;
+    	if ( value ==0 ) {
+            	color ="#D5F5E3";
+        } else if (value ==1 ) {
+                color ="#FDEBD0";
+        } else if (value ==2 ) {
+                color ="#F5B7B1";
+        } else {
+          		color ="#EAEDED";
+        }
+    	return color;
+  }
+  
+  function getAlarmColorName(value) {
+    	var color;
+    	if ( value ==0 ) {
+            	color ="green";
+        } else if (value ==1 ) {
+                color ="orange";
+        } else if (value ==2 ) {
+                color ="red";
+        } else {
+          		color ="red";
+        }
+    	return color;
+  }
+  function changeImgAlarm(value){
+    	var pathImg="plugins/alarmeIMA_V2/core/template/dashboard/img/alarme-" + getAlarmColorName(value) + ".png";
+    	var idImag#uid#=document.getElementById("idImgStatutAlarme#uid#");
+        idImag#uid#.setAttribute("src", pathImg);
+  }
+  
+  function changeSelectAlarmMode(value) {
+  	var text0 = "OFF";
+    var color0 = "green";
+    
+    var text1 = "PARTIAL";
+    var color1 = "#418d92";
+    
+    var text2 = "ON";
+    var color2 = "red";
+    
+    var coltxt0 = "white";
+    
+  	var on#uid# = document.getElementById("idOn#uid#");
+  	var partial#uid# = document.getElementById("idPartial#uid#");
+  	var Off#uid# = document.getElementById("idOff#uid#");
+  	var selector#id# = document.getElementById("selector#uid#");
+    
+    Off#uid#.innerHTML = text0;
+    partial#uid#.innerHTML = text1;
+    on#uid#.innerHTML = text2;
+    
+    
+    $('.switch_3_ways_v2#uid#').css('height','2em');
+    $('.switch2#uid#').css('float','left');
+    if (value == 2){
+      selector#id#.style.left = 0;
+      selector#id#.style.width = on#uid#.clientWidth + "px";
+      selector#id#.style.backgroundColor = color2;
+      selector#id#.innerHTML = text2;
+      selector#id#.style.color = 'white';
+    }else if (value == 1){
+      selector#id#.style.left = on#uid#.clientWidth + "px";
+      selector#id#.style.width = partial#uid#.clientWidth + "px";
+      selector#id#.innerHTML = text1;
+      selector#id#.style.backgroundColor = color1;
+      selector#id#.style.color = 'white';
+    }else if (value == 0){
+      selector#id#.style.left = on#uid#.clientWidth + partial#uid#.clientWidth + 1 + "px";
+      selector#id#.style.width = Off#uid#.clientWidth + "px";
+      selector#id#.innerHTML = text0;
+      selector#id#.style.backgroundColor = color0;
+      selector#id#.style.color = coltxt0;
+  	}else {
+      on#uid#.innerHTML = "*";
+      Off#uid#.innerHTML = "*";
+      selector#id#.style.left = on#uid#.clientWidth + "px";
+      selector#id#.style.width = partial#uid#.clientWidth + "px";
+      selector#id#.innerHTML = "ERROR";
+      selector#id#.style.backgroundColor = "orange";
+    }
+  }
+
+	 $(document).ready (function() {
+        console.log( "document loaded" );
+    	document.getElementById("alarmState#uid#").style.display = "block";
+    }
+	);
+  
+    $('.eqLogic[data-eqLogic_uid=#uid#] .refresh').on('click', function () {
+      jeedom.cmd.execute({id: '#refreshAlarmeStatus_id#'});
+    });
+  
+  	$('.eqLogic[data-eqLogic_uid=#uid#] .refreshEvents').on('click', function () {
+      jeedom.cmd.execute({id: '#refreshAlarmEvents_id#'});
+    });
+  
+  	$('.eqLogic[data-eqLogic_uid=#uid#] .refreshCameras').on('click', function () {
+      jeedom.cmd.execute({id: '#refreshCameraSnapshot_id#'});
+    });
+  
+  	jeedom.cmd.update['#alarmeEvents_id#'] = function(_options) {
+      	$('.ctabAlarmEvent#uid#').html(_options.display_value);
+    };
+  
+  	jeedom.cmd.update['#cameraSnapshot_id#'] = function(_options) {
+		console.log("update camera event : " + _options.display_value);
+		var selectHtml ='<div class="center#uid#"><select name="roomList" id="room#uid#" class="select#uid#">';
+		selectHtml +='#actionScreenshot_listValue#';
+		selectHtml += '</select></br><div style="text-align:center;"><input type="button" onclick="takeSnapshot()" value="Prendre instantané"></div></div>';
+     	$('.ctabSnapshot#uid#').html(selectHtml);
+		$('.ctabCameraEvent#uid#').html(_options.display_value);
+    };	
+	
+	
+	jeedom.cmd.update['#cameraSnapshot_id#']({display_value:'#cameraSnapshot#',valueDate:'#valueDate#'});
+  	//to do ..replace simple cote by \'
+    jeedom.cmd.update['#alarmeEvents_id#']({display_value:'#alarmeEvents#',valueDate:'#valueDate#'});
+	
+	function takeSnapshot(){
+		console.log("Take snapshot for romm : " + document.getElementById("room#uid#").value);
+		//jeedom.cmd.execute({id: '#actionScreenshot_id#', value: {'title': 'take', 'message': document.getElementById("room#uid#").value}});
+      	
+		$('#myModal').show();
+		$('.loader#uid#').show();
+				
+		 jeedom.cmd.execute({ id: '#actionScreenshot_id#', value: {'title': 'take', 'message': document.getElementById("room#uid#").value},
+                          success:  function($result) {
+                            console.log("url snapshot : " + $result);
+                            $('.loader#uid#').hide();
+							displayPicture($result);
+                          },error: function ($error) {
+								$('.loader#uid#').hide();
+								$('#myModal').hide();
+                            } 
+                         });
+	}
+  
+	function openCity(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent#uid#");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks#uid#");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active#uid#", "");
+        tablinks[i].style.backgroundColor = "";
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active#uid#";
+      setColorActiveSelector(getAlarmColor(globalAlarmStatut#uid#));
+    }
+  
+    
+    $('.on#uid#').on('click', function() {
+      //jeedom.cmd.execute({id :#setModeAlarme_id#, value : "2"});
+      jeedom.cmd.execute({id: '#setModeAlarme_id#', value: {'title': 'on', 'message': ''}});
+	  //showModalPwd("on");
+    });
+    $('.partial#uid#').on('click', function() {
+      //jeedom.cmd.execute({id :#setModeAlarme_id#, value : "1"});
+      jeedom.cmd.execute({id: '#setModeAlarme_id#', value: {'title': 'partial', 'message': ''}});
+	  //showModalPwd("partial");
+    });
+    $('.off#uid#').on('click', function() {
+      //jeedom.cmd.execute({id :#setModeAlarme_id#, value : "0"});
+	  showModalPwd("off");
+    });
+	
+	function showModalPwd(action) {
+		var modalPwd = document.getElementById("myModalPwd");
+      	document.getElementById("idtoto").style.width="250px";
+      	document.getElementById("idtoto").style.height="380px";
+      	document.getElementById("myModalPwd").setAttribute("data-action",action);
+      	load();
+		modalPwd.style.display = "block";
+	}
+      
+    function input(e) {
+        var tbInput = document.getElementById('tbInput');
+		console.log("value : " + tbInput.value);
+        tbInput.value = tbInput.value + e.value;
+    }
+
+    function del() {
+        var tbInput = document.getElementById('tbInput');
+        tbInput.value = tbInput.value.substr(0, tbInput.value.length - 1);
+    }
+      
+    function load() {
+        for (i = 0; i < 10; i++) {
+            var btn = document.getElementById("btn" + i);
+            btn.value = i;
+        }
+    }
+      
+    function validate() {
+      	deleteErrorSpan();
+      	jeedom.cmd.execute({id: '#setModeAlarme_id#', 
+                            value: {'title': 'off', 'message': document.getElementById('tbInput').value}, 
+                            success: function ($succes) {
+                              document.getElementById("myModalPwd").style.display = "none";
+                            } ,
+                            error: function ($error) {
+                              console.log("execute cmd en erreur : " + $error.message);
+                              document.getElementById("idtoto").innerHTML += $error.message;
+                              document.getElementById('span_errorMessage').setAttribute("style", "color:red;");
+                              console.log("span text : " + document.getElementById('span_errorMessage').innerText + "|" + document.getElementById('span_errorMessage').innerText.length);
+                              //document.getElementById("idtoto").style.width=10*(document.getElementById('span_errorMessage').innerText.length);
+                              document.getElementById("idtoto").style.width=8*(document.getElementById('span_errorMessage').innerText.length) + "px";
+                              document.getElementById("idtoto").style.height="410px";
+                            } 
+                           } 
+        );
+    }
+      
+    function deleteErrorSpan() {
+      	var spanError=document.getElementById('span_errorMessage');
+      	if (spanError) {
+          spanError.parentNode.removeChild(spanError);
+        }
+    }
+
+</script>
+<style>
+
+  /* Change background color of buttons on hover */
+.tab#uid# button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab#uid# button.active#uid# {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent#uid# {
+  display: none;
+  padding: 6px 12px;
+  -webkit-animation: fadeEffect 1s;
+  animation: fadeEffect 1s;
+  border-radius:0.3em;
+}
+
+/* Fade in tabs */
+@-webkit-keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+.global#uid#{
+	height: 210px;
+  	position:relative;
+  	border:solid 2px #5B5B5B;	
+  	border-radius:0.3em;
+}
+
+  .imageStatut#uid# {
+  	margin-left:auto;
+  	margin-right:auto;
+    margin-top:40px;
+  	width:100%;
+   	top: 0;
+    left: 0;
+    position:absolute;
+}
+  
+.imgStatutAlarme#uid# {
+  	height: 130px;
+  	width: 130px;
+  	display:block;
+  	margin-left:auto;
+  	margin-right:auto;
+   	z-index: 1;
+}
+  
+.global#uid#{
+  margin-top:50px;
+}
+  
+.ctabCameraEvent#uid#,.ctabAlarmEvent#uid#, .ctabSnapshot#uid# {
+  margin-top:30px;
+}
+
+
+.colonneTab#uid# {
+	float: right;
+	width: 57%;
+	height : 100%;
+	margin-left: 5px;
+	//background: burlywood;
+}
+
+
+.center#uid# {
+    /*These options are for the div to be visible in the example, the important is the first*/
+    width: 150px;
+  	margin:auto;
+}
+
+.select#uid# {
+    display: block;
+    margin: 0;
+  	text-align: center;
+}
+  
+.loader#uid# {
+  border: 8px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 8px solid #3498db;
+  width: 60px;
+  height: 60px;
+  -webkit-animation: spin#uid# 2s linear infinite; /* Safari */
+  animation: spin#uid# 2s linear infinite;
+  //margin:0;
+  margin-left:auto;
+  margin-right:auto;
+  display:none;
+}
+
+/* Safari */
+@-webkit-keyframes spin#uid# {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.blocSelect#id# {
+	width: 210px;
+	height : 50px;
+	//background: purple;	
+	position:absolute;
+	top: 230px;
+}
+.switch_3_ways_v2#uid#{
+  margin:5px 10px 10px 10px;
+  color:#D0D0D0;
+  border:solid 1px #5B5B5B;
+  font-size:1em;
+  font-weight:bold;
+  line-height:2em;
+  border-radius:0.3em;
+  background:grey;
+  position:relative;
+  display:block;
+  box-shadow:0px 2px 2px 0px rgba(0, 0, 0, 0.75) inset,0px 2px 2px 0px rgba(255, 255, 255, 0.5);
+  width:200px;
+  margin-left:auto;
+  margin-right:auto;
+}
+  
+.switch2#uid#.on#uid#,
+.switch2#uid#.partial#uid#,
+.switch2#uid#.off#uid#{
+  cursor:pointer;
+  position:relative;
+  display:block;
+  -webkit-transition: 300ms ease-out;
+  -moz-transition: 300ms ease-out;
+  transition: 300ms ease-out;
+  padding: 0 1em;
+}
+.selector#uid#{
+  text-align:center;
+  position:absolute;
+  width:0;
+  box-sizing:border-box;
+  -webkit-transition: 300ms ease-out;
+  -moz-transition: 300ms ease-out;
+  transition: 300ms ease-out;
+  border-radius:0.3em;
+  border:solid 0.5px white;
+  color:white;
+  text-shadow: 1px 1px 3px #000;
+  box-shadow:0px 2px 2px 0px rgba(0, 0, 0, 0.75),0px 2px 13px 0px #9b9b9b,0px 2px 2px 0px rgba(255, 255, 255, 0.5) inset;
+}
+
+//manage css TAB
+/* Style the tab */
+.tab#uid# {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab#uid# button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  //width: 30%;
+  //height:520px;
+  width: 710px;
+  height:520px;
+}
+
+.toto {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+}
+/* The Close Button */
+.close {
+  //color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+  
+.itemPreview#id# {
+  transform-origin: top left;
+  transform: scale(2);
+}
+  
+.styled {	
+  height:60px;
+  width:60px;
+  border: 0;
+  line-height: 2.5;
+  padding: 0 20px;
+  padding-bottom:10px;
+  font-size: 1rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 1px 1px 1px #000;
+  border-radius: 10px;
+  //background-color: rgba(220, 0, 0, 1);
+  background-color: rgba(107, 109, 111, 1);
+  background-image: linear-gradient(to top left,
+    rgba(0, 0, 0, .2),
+    rgba(0, 0, 0, .2) 30%,
+    rgba(0, 0, 0, 0));
+  box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
+    inset -2px -2px 3px rgba(0, 0, 0, .6);
+}
+  
+.line{
+  	//padding-bottom:3px;
+  	padding-top:3px;
+}
+
+.styled:hover {
+ background-color: rgba(184, 225, 232, 1);
+}
+
+.styled:active {
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
+                inset 2px 2px 3px rgba(0, 0, 0, .6);
+}
+
+  /* Set a fixed scrollable wrapper */
+.tableWrap {
+  height: 200px;
+  border: 2px solid black;
+  overflow: auto;
+}
+/* Set header to stick to the top of the container. */
+thead tr th {
+  position: sticky;
+  top: 0;
+}
+
+/* If we use border,
+we must use table-collapse to avoid
+a slight movement of the header row */
+table {
+ border-collapse: collapse;
+}
+
+/* Because we must set sticky on th,
+ we have to apply background styles here
+ rather than on thead */
+th {
+  padding: 16px;
+  padding-left: 15px;
+  border-left: 1px dotted rgba(200, 209, 224, 0.6);
+  border-bottom: 1px solid #e8e8e8;
+  background: #ffc491;
+  text-align: left;
+  /* With border-collapse, we must use box-shadow or psuedo elements
+  for the header borders */
+  box-shadow: 0px 0px 0 2px #e8e8e8;
+}
+
+/* Basic Demo styling */
+
+table {
+  width: 100%;
+  font-family: sans-serif;
+}
+
+table td {
+  padding: 16px;
+}
+
+tbody tr {
+  border-bottom: 2px solid #e8e8e8;
+  //background:red;
+}
+
+thead {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+tbody tr:hover {
+  background: #e6f7ff;
+}
+
+table thead th, table tbody tr {
+  text-align: center;
+}
+
+table thead th {
+  text-align: center;
+  border-left: 1px solid #f2f2f2; 
+  border-right: 1px solid #d5d5d5; 
+  background: #ddd;
+  font-weight: bold;
+}
+  
+</style>
