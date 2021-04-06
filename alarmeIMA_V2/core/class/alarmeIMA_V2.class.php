@@ -64,9 +64,9 @@ class alarmeIMA_V2 extends eqLogic {
                         } else {
                             log::add('alarmeIMA_V2', 'debug', "Retour ignoré");
                         }
+						$alarmeIMA_V2->writeSeparateLine();
                    }
-                   
-                  $alarmeIMA_V2->writeSeparateLine();
+                                     
 				}
 			} catch (Exception $exc) {
 				log::add('alarmeIMA_V2', 'error', __("Erreur lors de l'exécution du cron ", __FILE__) . $exc->getMessage());
@@ -110,8 +110,8 @@ class alarmeIMA_V2 extends eqLogic {
     }
 
     public function postSave() {
-		log::add('alarmeIMA_V2', 'debug',  "appel postSave");
-      	$this->createCmd();
+		//log::add('alarmeIMA_V2', 'debug',  "appel postSave");
+      	//$this->createCmd();
         
     }
   
@@ -310,11 +310,10 @@ class alarmeIMA_V2 extends eqLogic {
 		if (empty($this->getConfiguration('password_ima'))) {
 			throw new Exception(__('Le mot de passe ne peut etre vide',__FILE__));
 		}
-
     }
 
     public function postUpdate() {
-		
+		$this->createCmd();
     }
 
     public function preRemove() {
