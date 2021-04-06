@@ -264,9 +264,9 @@ class alarmeIMA_V2 extends eqLogic {
 			log::add('alarmeIMA_V2', 'debug', 'Création de la commande '.$cmdRefreshCameraSnapshot->getName().' (LogicalId : '.$cmdRefreshCameraSnapshot->getLogicalId().')');
 		}
       
-      	$cmdActionModeAlarme = $this->getCmd(null, 'setModeAlarme');
-        if ( ! is_object($cmdActionModeAlarme)) {
-          $cmdActionModeAlarme = new verisureCmd();
+		$cmdActionModeAlarme = $this->getCmd(null, 'setModeAlarme');
+        if (!is_object($cmdActionModeAlarme)) {
+          $cmdActionModeAlarme = new alarmeIMA_V2Cmd();
           $cmdActionModeAlarme->setOrder(9);
           $cmdActionModeAlarme->setName('Action mode alarme');
           $cmdActionModeAlarme->setEqLogic_id($this->getId());
